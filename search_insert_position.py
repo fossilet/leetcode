@@ -17,6 +17,7 @@ Here are few examples.
 Since Apr-15-2014 18:02
 """
 
+
 class Solution:
     # @param A, a list of integers
     # @param target, an integer to be inserted
@@ -24,9 +25,15 @@ class Solution:
     def searchInsert(self, A, target):
         pos = 0
         for i in range(len(A)):
-            if target == A[i]:
-                return i
-            elif target < A[i]:
+            if target <= A[i]:
                 return i
         else:
             return len(A)
+
+if __name__ == '__main__':
+    s = Solution()
+    A = [1, 3, 5, 6]
+    assert s.searchInsert(A, 5) == 2
+    assert s.searchInsert(A, 2) == 1
+    assert s.searchInsert(A, 7) == 4
+    assert s.searchInsert(A, 0) == 0
