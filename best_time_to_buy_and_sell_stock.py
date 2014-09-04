@@ -11,63 +11,83 @@ sell one share of the stock), design an algorithm to find the maximum profit.
 
 Tue Sep  2 18:33:12 CST 2014
 """
+import unittest
 
 
 class Solution:
     # @param prices, a list of integer
     # @return an integer
 
-    # FIXME: runtime error on OJ.
-    cache = {}
+    def __init__(self):
+        self.cache = {}
 
     def memoize(f):
         def inner(*args, **kwargs):
             try:
-                return Solution.cache[args[2]]
+                return args[0].cache[args[2]]
             except KeyError:
-                Solution.cache[args[2]] = f(*args, **kwargs)
-                return Solution.cache[args[2]]
-
+                args[0].cache[args[2]] = f(*args, **kwargs)
+                return args[0].cache[args[2]]
         return inner
 
     def maxProfit(self, prices):
-        Solution.cache = {}
         if not prices:
             return 0
         else:
-            return max(self.maxProfit1(prices, x) for x in range(len(prices)))
+            return max(self.profit_helper(prices, x) for x in range(len(prices)))
 
+    # NOTE: memoize cannot avoid recursion limit exception.
     @memoize
-    def maxProfit1(self, prices, x):
+    def profit_helper(self, prices, x):
         """ Max profit when bying at day x.
         p = a_0, a_1, a_2, ..., a_x, a_x+1, ...
-        f(x+1) = max(p[x+2:]) - p[x+1]
-        f(x) = max(p[x+1:]) - p(x)
-             = max(p[x+1], max(p[x+2:])) - p(x)
-             = max(p[x+1], p[x+1] + f(x+1)) - p(x)
+        f(x+1) = max(p[x+1:]) - p[x+1]
+        f(x) = max(p[x:]) - p(x)
+             = max(p[x], max(p[x+1:])) - p(x)
+             = max(p[x], p[x+1] + f(x+1)) - p(x)
         """
         if x == len(prices) - 1:
             return 0
         else:
-            return max(prices[x + 1],
-                       prices[x + 1] + self.maxProfit1(prices, x + 1)) \
+            return max(prices[x],
+                       prices[x + 1] + self.profit_helper(prices, x + 1)) \
                    - prices[x]
 
 
-if __name__ == '__main__':
-    s = Solution()
-    a = [1, 2, 3, 8, 4]
-    assert [s.maxProfit1(a, x) for x in range(len(a))] == [7, 6, 5, -4, 0]
+class testSolution(unittest.TestCase):
+    def setUp(self):
+        self.s = Solution()
 
-    a = []
-    assert s.maxProfit(a) == 0
-    a = [1]
-    assert s.maxProfit(a) == 0
-    a = [1, 1, 1, 1, 1]
-    assert s.maxProfit(a) == 0
-    a = [1, 2, 3, 8, 4]
-    assert s.maxProfit(a) == 7
-    a = [1, 2, 3, 4, 5]
-    assert s.maxProfit(a) == 4
-    a = [5, 4, 3, 2, 1]
-    assert s.maxProfit(a) == 0
+    def test_profithelper(self):
+        a = [1, 2, 3, 8, 4]
+        self.assertEqual([self.s.profit_helper(a, x) for x in range(len(a))],
+                         [7, 6, 5, 0, 0])
+
+    def test_profithelper1(self):
+        a = [5, 4, 3, 2, 1]
+        self.assertEqual([self.s.profit_helper(a, x) for x in range(len(a))],
+                         [0, 0, 0, 0, 0])
+
+    def test_maxProfit(self):
+        self.assertEqual(self.s.maxProfit([]), 0)
+
+    def test_maxProfit1(self):
+        self.assertEqual(self.s.maxProfit([1]), 0)
+
+    def test_maxProfit2(self):
+        self.assertEqual(self.s.maxProfit([1, 1, 1, 1, 1]), 0)
+
+    def test_maxProfit3(self):
+        self.assertEqual(self.s.maxProfit([1, 2, 3, 8, 4]), 7)
+
+    def test_maxProfit4(self):
+        self.assertEqual(self.s.maxProfit([1, 2, 3, 4, 5]), 4)
+
+    def test_maxProfit5(self):
+        self.assertEqual(self.s.maxProfit([5, 4, 3, 2, 1]), 0)
+
+# a = range(1000)
+# print(s.profit_helper(a, 667))
+
+if __name__ == '__main__':
+    unittest.main()
