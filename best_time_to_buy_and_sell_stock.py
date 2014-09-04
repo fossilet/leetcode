@@ -17,11 +17,24 @@ import unittest
 class Solution:
     # @param prices, a list of integer
     # @return an integer
+    def maxProfit(self, prices):
+        """ Directly converted from the recursion version.
+        """
+        i = len(prices) - 1
+        res = 0
+        t = 0  # tentative
+        while i > 0:
+            t = max(prices[i - 1], prices[i] + t) - prices[i - 1]
+            i -= 1
+            if t > res:
+                res = t
+        return res
 
     def __init__(self):
         self.cache = {}
 
     def memoize(f):
+        # Note: `f' is the wrapped function, not an `self' instance.
         def inner(*args, **kwargs):
             try:
                 return args[0].cache[args[2]]
@@ -30,14 +43,14 @@ class Solution:
                 return args[0].cache[args[2]]
         return inner
 
-    def maxProfit(self, prices):
+    def maxProfit_recursion(self, prices):
         if not prices:
             return 0
         else:
             return max(self.profit_helper(prices, x) for x in range(len(prices)))
 
-    # NOTE: memoize cannot avoid recursion limit exception.
     @memoize
+    # NOTE: memoize cannot avoid recursion limit exception.
     def profit_helper(self, prices, x):
         """ Max profit when bying at day x.
         p = a_0, a_1, a_2, ..., a_x, a_x+1, ...
@@ -70,24 +83,28 @@ class testSolution(unittest.TestCase):
 
     def test_maxProfit(self):
         self.assertEqual(self.s.maxProfit([]), 0)
+        self.assertEqual(self.s.maxProfit_recursion([]), 0)
 
     def test_maxProfit1(self):
         self.assertEqual(self.s.maxProfit([1]), 0)
+        self.assertEqual(self.s.maxProfit_recursion([]), 0)
 
     def test_maxProfit2(self):
         self.assertEqual(self.s.maxProfit([1, 1, 1, 1, 1]), 0)
+        self.assertEqual(self.s.maxProfit_recursion([]), 0)
 
     def test_maxProfit3(self):
         self.assertEqual(self.s.maxProfit([1, 2, 3, 8, 4]), 7)
+        self.assertEqual(self.s.maxProfit_recursion([]), 0)
 
     def test_maxProfit4(self):
         self.assertEqual(self.s.maxProfit([1, 2, 3, 4, 5]), 4)
+        self.assertEqual(self.s.maxProfit_recursion([]), 0)
 
     def test_maxProfit5(self):
         self.assertEqual(self.s.maxProfit([5, 4, 3, 2, 1]), 0)
+        self.assertEqual(self.s.maxProfit_recursion([]), 0)
 
-# a = range(1000)
-# print(s.profit_helper(a, 667))
 
 if __name__ == '__main__':
     unittest.main()
