@@ -21,11 +21,16 @@ class Solution:
         i = -1
         length = 0
 
-        s = s.rstrip()
-
-        while i >= -len(s) and s[i] != ' ':
-            length += 1
-            i -= 1
+        while i >= -len(s):
+            if s[i] == ' ':
+                if length == 0:
+                    i -= 1
+                    continue
+                else:
+                    break
+            else:
+                length += 1
+                i -= 1
         return length
 
 if __name__ == '__main__':
@@ -34,6 +39,6 @@ if __name__ == '__main__':
     assert s.lengthOfLastWord('   ') == 0
     assert s.lengthOfLastWord('s') == 1
     assert s.lengthOfLastWord('s ') == 1
-    assert s.lengthOfLastWord('s   ') == 1
+    assert s.lengthOfLastWord('  s   ') == 1
     assert s.lengthOfLastWord('Hello world') == 5
     assert s.lengthOfLastWord('Hello ') == 5
