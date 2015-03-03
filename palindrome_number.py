@@ -30,7 +30,7 @@ class Solution:
             while x != 0:
                 x /= 10
                 l += 1
-        return l
+            return l
 
 
 if __name__ == '__main__':
