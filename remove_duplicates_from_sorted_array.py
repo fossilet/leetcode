@@ -21,18 +21,26 @@ Since Apr-22-2014 18:16
 class Solution:
     # @param a list of integers
     # @return an integer
-    def removeDuplicates(self, A):
-        L = len(A)
-        if L in (0, 1):
-            return L
+    def removeDuplicates(self, a):
+        global A
+        l = len(a)
+        if l in (0, 1):
+            return l
         else:
             i = 0
-            while i <= L - 2:
-                if A[i] == A[i + 1]:
-                    A.remove(A[i])
-                L = len(A)
-                i += 1
+            B = []
+            while i < l:
+                if i == l - 1:
+                    B.append(a[i])
+                    break
+                if a[i] == a[i + 1]:
+                    i += 1
+                else:
+                    B.append(a[i])
+                    i += 1
+            A = list(B)
             return len(A)
+
 
 if __name__ == '__main__':
     s = Solution()
