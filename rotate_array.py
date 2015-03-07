@@ -16,20 +16,26 @@ class Solution:
     # @return nothing, please modify the nums list in-place.
     def rotate(self, nums, k):
         l = len(nums)
-        if k > l - 1:
-            return nums
-        else:
-            new = []
-            for i in range(-l, 0):
-                new.append(nums[i + l - k])
-            return new
+        if 0 < k:
+            k %= l
+            t = nums[-1:-1 - k:-1]
+            for i in range(l - 1, k - 1, -1):
+                nums[i] = nums[i - k]
+            nums[0:k] = reversed(t)
 
 
 if __name__ == '__main__':
     s = Solution()
+    assert s.rotate([1], 0) == [1]
     assert s.rotate([0], 3) == [0]
     assert s.rotate([-1], 2) == [-1]
     assert s.rotate([1, 2], 1) == [2, 1]
+    assert s.rotate([1, 2], 3) == [2, 1]
     assert s.rotate([0, 1], 2) == [0, 1]
+
+    assert s.rotate([1, 2, 3, 4], 1) == [4, 1, 2, 3]
+    assert s.rotate([1, 2, 3, 4, 5], 2) == [4, 5, 1, 2, 3]
     assert s.rotate([3, 0, 1], 2) == [0, 1, 3]
     assert s.rotate([1, 2, 3, 4, 5, 6, 7], 3) == [5, 6, 7, 1, 2, 3, 4]
+
+    assert s.rotate([1, 2, 3, 4, 5, 6], 2) == [5, 6, 1, 2, 3, 4]
