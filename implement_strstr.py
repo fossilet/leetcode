@@ -17,16 +17,16 @@ class Solution:
         else:
             i, j, ind = 0, 0, 0
             while i < len(needle) and j < len(haystack):
-                if needle[i] != haystack[j]:
-                    j -= ind - 1
-                    i = 0
-                    ind = 0
-                else:
+                if needle[i] == haystack[j]:
                     i += 1
                     j += 1
                     ind += 1
                     if ind == len(needle):
                         return j - ind
+                else:
+                    j -= ind - 1
+                    i = 0
+                    ind = 0
             else:
                 return -1
 
