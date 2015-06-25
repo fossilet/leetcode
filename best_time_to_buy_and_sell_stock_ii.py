@@ -17,15 +17,8 @@ class Solution:
     # @param {integer[]} prices
     # @return {integer}
     def maxProfit(self, prices):
-        i, j = 0, 1
-        n = len(prices)
-        p = 0
-        while i < n and j < n:
-            if prices[j] > prices[i]:
-                p += prices[j] - prices[i]
-            i += 1
-            j += 1
-        return p
+        return sum(prices[i + 1] - prices[i] for i in range(len(prices) - 1)
+                   if prices[i + 1] - prices[i] > 0)
 
 
 if __name__ == '__main__':
