@@ -49,6 +49,21 @@ class Solution:
             return 0
 
 
+def compareVersion(self, version1, version2):
+    # https://discuss.leetcode.com/topic/6238/accepted-small-java-solution/3
+    v1, v2 = version1.split('.'), version2.split('.')
+
+    i = 0
+    while i < max(len(v1), len(v2)):
+        num1 = int(v1[i]) if i < len(v1) else 0
+        num2 = int(v2[i]) if i < len(v2) else 0
+        if num1 < num2:
+            return -1
+        elif num1 > num2:
+            return 1
+        i += 1
+    return 0
+
 if __name__ == '__main__':
     s = Solution()
     assert s.compareVersion('1', '0') == 1
